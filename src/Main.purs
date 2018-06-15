@@ -1,45 +1,74 @@
 module Main where
 
-import Data.Maybe
+import Data.Maybe (Maybe(..))
 
 import Data.Options (Options, (:=))
 import Effect (Effect)
+import Effect.Aff (runAff_, attempt, launchAff_, Aff)
 import Effect.Console (logShow)
-import Node.Buffer (toString)
-import Node.Encoding (Encoding(..))
+import Effect.Class
+import Effect.Exception
+import Milkis (URL(..), defaultFetchOptions, Fetch, Response)
+import Milkis as M
+import Milkis.Impl.Node
 import Node.HTTP.Client as Client
-import Node.Stream (end, onData, pipe, readString)
-import Prelude (Unit, bind, discard, pure, unit, void, ($), (<>), (>>=))
+import Prelude
+import Data.Either (Either(..))
+import Foreign
 
 
+type PersonResponse = {
+  data :: {
+    first_name :: String
+  }
+}
 
-testOpts :: Options Client.RequestOptions
-testOpts = Client.protocol := "https:" <>
-      Client.method := "GET" <>
-      Client.hostname := "dou.ua" <>
-      Client.path := "/" <>
-      Client.rejectUnauthorized := false
+fetch :: Fetch
+fetch = M.fetch nodeFetch
 
-y :: Maybe Int
-y = Just 1000
+url :: URL
+url = URL "https://api.hunter.io/v2/email-finder?company=Asana&full_name=Dustin+Moskovit&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a"
+
+getPerson :: Foreign -> PersonResponse
+getPerson = unsafeFromForeign
+
+responseToEitherAffPerson :: Response -> Aff (Either Error PersonResponse)
+responseToEitherAffPerson =
+  map (\x -> Right x) <<< map(getPerson) <<< M.json
+
+-- errorTo :: Error -> Either Error PersonResponse
+-- errorTo x = 
+
+getResponse :: Either Error Response -> Aff (Either Error PersonResponse)
+getResponse r = do
+  case r of
+    Left e ->
+      pure (Left e)
+    Right res ->
+      responseToEitherAffPerson res
 
 main :: Effect Unit
-main = do
-  -- x <- y
-  -- y >>= logShow
-  req <- Client.request
-    testOpts
-    \r -> void do
-      logShow $ Client.responseHeaders r
-      let responseStream = Client.responseAsStream r
+main = launchAff_ do
+  r <- attempt $ fetch url defaultFetchOptions
+  response <- getResponse(r)
+  liftEffect case response of
+    Left e ->
+      logShow("error")
+    Right res ->
+      logShow res.data.first_name
+  -- runAff_ (\x -> case x of
+  --   Left e -> do
+  --     logShow $ pure "error"
+  --   Right res -> do
+  --     t <- M.text res
+  --     logShow t
+  --       )(fetch url defaultFetchOptions)
 
-      onData
-        responseStream
-        \d -> toString UTF8 d >>= logShow
 
-  end (Client.requestAsStream req) (pure unit)
-
-
+      
+-- either_test = getUserE
+--                 >>> map getUserName
+--                 >>> unsafePartial (fromRight)
 
 -- logShow (foldl(\a x -> a + x + 10.0) 0.0 [1.0, 2.0, 3.0])
 
