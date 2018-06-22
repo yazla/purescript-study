@@ -1,21 +1,17 @@
 module Main where
 
+import Effect.Class (liftEffect)
+import Milkis.Impl.Node (nodeFetch)
+import Prelude (Unit, bind, show)
+
 import Data.Maybe (Maybe(..))
-
-import Data.Options (Options, (:=))
+import Data.Nullable (toNullable)
 import Effect (Effect)
-import Effect.Aff (runAff_, attempt, launchAff_, Aff)
+import Effect.Aff (launchAff_)
 import Effect.Console (logShow)
-import Effect.Class
-import Effect.Exception
-import Milkis (URL(..), defaultFetchOptions, Fetch, Response)
+import Email as E
+import Milkis (Fetch)
 import Milkis as M
-import Milkis.Impl.Node
-import Node.HTTP.Client as Client
-import Prelude
-import Data.Either (Either(..))
-import Foreign
-
 
 type PersonResponse = {
   data :: {
@@ -26,45 +22,56 @@ type PersonResponse = {
 fetch :: Fetch
 fetch = M.fetch nodeFetch
 
-url :: URL
-url = URL "https://api.hunter.io/v2/email-finder?company=Asana&full_name=Dustin+Moskovit&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a"
+-- url :: URL
+-- url = URL "https://api.hunter.io/v2/email-finder?company=Asana&full_name=Dustin+Moskovit&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a"
 
-getPerson :: Foreign -> PersonResponse
-getPerson = unsafeFromForeign
+-- getPerson :: Foreign -> PersonResponse
+-- getPerson = unsafeFromForeign
 
-responseToEitherAffPerson :: Response -> Aff (Either Error PersonResponse)
-responseToEitherAffPerson =
-  map (\x -> Right x) <<< map(getPerson) <<< M.json
+-- responseToAffEitherPerson :: Response -> Aff (Either Error PersonResponse)
+-- responseToAffEitherPerson =
+--   map (\x -> Right x) <<< map(getPerson) <<< M.json
 
--- errorTo :: Error -> Either Error PersonResponse
--- errorTo x = 
+-- -- errorTo :: Error -> Either Error PersonResponse
+-- -- errorTo x = 
 
-getResponse :: Either Error Response -> Aff (Either Error PersonResponse)
-getResponse r = do
-  case r of
-    Left e ->
-      pure (Left e)
-    Right res ->
-      responseToEitherAffPerson res
+-- getResponse :: Either Error Response -> Aff (Either Error PersonResponse)
+-- getResponse r = do
+--   case r of
+--     Left e ->
+--       pure (Left e)
+--     Right res ->
+--       responseToEitherAffPerson res
+
+p :: E.EmailParams
+p = {
+  first_name: "Yuriy",
+  last_name: "Yazlovytskyy",
+  middle_name: toNullable Nothing,
+  company: (E.WebAddress "linkmatch.net")
+}
+
 
 main :: Effect Unit
 main = launchAff_ do
-  r <- attempt $ fetch url defaultFetchOptions
-  response <- getResponse(r)
+  response <- E.findEmail p
   liftEffect case response of
-    Left e ->
-      logShow("error")
-    Right res ->
-      logShow res.data.first_name
-  -- runAff_ (\x -> case x of
-  --   Left e -> do
-  --     logShow $ pure "error"
-  --   Right res -> do
-  --     t <- M.text res
-  --     logShow t
-  --       )(fetch url defaultFetchOptions)
+    Just e ->
+      logShow(show e)
+    Nothing ->
+      logShow "saryan"
 
 
+
+-- main :: Effect Unit
+-- main = launchAff_ do
+--   r <- attempt $ fetch url defaultFetchOptions
+--   response <- getResponse(r)
+--   liftEffect case response of
+--     Left e ->
+--       logShow("error")
+--     Right res ->
+--       logShow res.data.first_name
       
 -- either_test = getUserE
 --                 >>> map getUserName
