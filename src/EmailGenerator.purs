@@ -2,7 +2,7 @@ module EmailGenerator where
 
 import AJAX
 import Data.Either
-import Utils
+import ListAToA
 
 import Data.List (List(..), fromFoldable, (:))
 import Data.Maybe (Maybe(..))

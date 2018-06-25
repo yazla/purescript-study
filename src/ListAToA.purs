@@ -1,4 +1,4 @@
-module Utils where
+module ListAToA where
 
 import Prelude (class Monad, bind, pure)
 import Data.List (List(..), (:))
