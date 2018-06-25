@@ -11,7 +11,8 @@
     "purescript-console": "^4.1.0",
     "purescript-aff": "^5.0.0",
     "purescript-milkis": "^6.0.1",
-    "purescript-nullable": "^4.0.0"
+    "purescript-nullable": "^4.0.0",
+    "purescript-foreign": "^5.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
