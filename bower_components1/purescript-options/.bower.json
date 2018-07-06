@@ -1,0 +1,38 @@
+{
+  "name": "purescript-options",
+  "homepage": "https://github.com/purescript-contrib/purescript-options",
+  "description": "PureScript Options",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-contrib/purescript-options.git"
+  },
+  "ignore": [
+    "*",
+    "!src/**/*",
+    "!LICENSE"
+  ],
+  "dependencies": {
+    "purescript-foreign": "^5.0.0",
+    "purescript-foreign-object": "^1.0.0",
+    "purescript-tuples": "^5.0.0",
+    "purescript-maybe": "^4.0.0",
+    "purescript-contravariant": "^4.0.0"
+  },
+  "devDependencies": {
+    "purescript-console": "^4.1.0"
+  },
+  "version": "4.0.0",
+  "_release": "4.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.0.0",
+    "commit": "c9a053eb7014069c11cac842bfc3b5f70b71d2c4"
+  },
+  "_source": "https://github.com/ethul/purescript-options.git",
+  "_target": "^4.0.0",
+  "_originalSource": "purescript-options"
+}

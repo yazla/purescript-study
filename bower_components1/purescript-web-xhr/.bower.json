@@ -1,0 +1,35 @@
+{
+  "name": "purescript-web-xhr",
+  "homepage": "https://github.com/purescript-web/purescript-web-xhr",
+  "authors": [
+    "Nathan Faubion <nathan@n-son.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-web/purescript-web-xhr.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-arraybuffer-types": "^2.0.0",
+    "purescript-datetime": "^4.0.0",
+    "purescript-http-methods": "^4.0.0",
+    "purescript-web-dom": "^1.0.0",
+    "purescript-web-file": "^1.0.0"
+  },
+  "version": "2.0.0",
+  "_release": "2.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.0",
+    "commit": "c363e5dbde775acd42d8e8c12be55e2c65dc66a2"
+  },
+  "_source": "https://github.com/purescript-web/purescript-web-xhr.git",
+  "_target": "^2.0.0",
+  "_originalSource": "purescript-web-xhr"
+}

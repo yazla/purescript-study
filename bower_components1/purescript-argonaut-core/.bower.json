@@ -1,0 +1,55 @@
+{
+  "name": "purescript-argonaut-core",
+  "homepage": "https://github.com/purescript-contrib/purescript-argonaut-core",
+  "description": "Core of the purescript-argonaut library, providing basic types, folds, and combinators for `Json`",
+  "license": "MIT",
+  "authors": [
+    "Maxim Zimaliev <zimaliev@yandex.ru>",
+    "Hardy Jones <>",
+    "John A. De Goes <john@degoes.net>"
+  ],
+  "keywords": [
+    "purescript",
+    "argonaut",
+    "json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-contrib/purescript-argonaut-core.git"
+  },
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "test",
+    "bower.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-arrays": "^5.0.0",
+    "purescript-control": "^4.0.0",
+    "purescript-either": "^4.0.0",
+    "purescript-foreign-object": "^1.0.0",
+    "purescript-functions": "^4.0.0",
+    "purescript-gen": "^2.0.0",
+    "purescript-maybe": "^4.0.0",
+    "purescript-nonempty": "^5.0.0",
+    "purescript-prelude": "^4.0.0",
+    "purescript-strings": "^4.0.0",
+    "purescript-tailrec": "^4.0.0"
+  },
+  "devDependencies": {
+    "purescript-quickcheck": "^5.0.0"
+  },
+  "version": "4.0.0",
+  "_release": "4.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.0.0",
+    "commit": "42932052bb51b1870075395bb9c489b21d83269a"
+  },
+  "_source": "https://github.com/purescript-contrib/purescript-argonaut-core.git",
+  "_target": "^4.0.0",
+  "_originalSource": "purescript-argonaut-core"
+}

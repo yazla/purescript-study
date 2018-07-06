@@ -3,12 +3,12 @@ module Main where
 import AJAX
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
-import Data.Nullable (toNullable)
+import Data.Nullable
 import Effect (Effect)
 import Effect.Aff (Aff, Error, attempt, launchAff_)
 import Effect.Class (liftEffect)
 import Effect.Console (logShow)
-import EmailGenerator(findEmail, WebAddress, EmailParams)
+import EmailGenerator as E
 import Foreign (Foreign, unsafeFromForeign)
 import Milkis (Fetch, Response, URL(..), defaultFetchOptions, json)
 import Milkis.Impl.Node (nodeFetch)
@@ -40,29 +40,33 @@ getResponse r = do
     Right res ->
       responseToPersonPesponse res
 
-p :: EmailParams
+p :: E.EmailParams
 p = {
   first_name: "Yuriy",
   last_name: "Yazlovytskyy",
   middle_name: toNullable Nothing,
-  company: (WebAddress "linkmatch.net")
+  company: (E.WebAddress "linkmatch.net")
 }
 findEmailByParams :: Effect Unit
 findEmailByParams = launchAff_ do
-  response <- findEmail p
-  liftEffect case response of
-    Just e ->
-      logShow(show e)
-    Nothing ->
-      logShow "saryan"
-
-
-findEmail :: Effect Unit
-findEmail = launchAff_ do
-  r <- get url
-  response <- getResponse(r)
+  response <- E.findEmail p
   liftEffect case response of
     Left e ->
-      logShow("error")
-    Right res ->
-      logShow res.data.email
+      logShow(show e)
+    Right x ->
+      case x of
+        Just email ->
+          logShow email
+        Nothing ->
+          logShow "saryan"
+
+
+-- findEmail :: Effect Unit
+-- findEmail = launchAff_ do
+--   r <- get url
+--   response <- getResponse(r)
+--   liftEffect case response of
+--     Left e ->
+--       logShow("error")
+--     Right res ->
+--       logShow res.data.email

@@ -12,9 +12,12 @@
     "purescript-aff": "^5.0.0",
     "purescript-milkis": "^6.0.1",
     "purescript-nullable": "^4.0.0",
-    "purescript-foreign": "^5.0.0"
+    "purescript-foreign": "^5.0.0",
+    "purescript-typelevel": "^4.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^4.0.0"
+    "purescript-psci-support": "^4.0.0",
+    "purescript-debug": "^4.0.0",
+    "purescript-foreign-generic": "^7.0.0"
   }
 }

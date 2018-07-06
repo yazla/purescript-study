@@ -1,0 +1,30 @@
+{
+  "name": "purescript-web-dom",
+  "homepage": "https://github.com/purescript-web/purescript-web-dom",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-web/purescript-web-dom.git"
+  },
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "bower.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-web-events": "^1.0.0"
+  },
+  "version": "1.0.0",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "3c756980ef75564e782cdbe16d748a1ee8187ae2"
+  },
+  "_source": "https://github.com/purescript-web/purescript-web-dom.git",
+  "_target": "^1.0.0",
+  "_originalSource": "purescript-web-dom"
+}

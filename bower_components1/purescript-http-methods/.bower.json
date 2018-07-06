@@ -1,0 +1,34 @@
+{
+  "name": "purescript-http-methods",
+  "homepage": "https://github.com/purescript-contrib/purescript-http-methods",
+  "description": "HTTP method type",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-contrib/purescript-http-methods.git"
+  },
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "test",
+    "bower.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-either": "^4.0.0",
+    "purescript-prelude": "^4.0.0",
+    "purescript-strings": "^4.0.0"
+  },
+  "version": "4.0.0",
+  "_release": "4.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.0.0",
+    "commit": "8f2bfad6dc6964817a0a917487f702930f6d7c72"
+  },
+  "_source": "https://github.com/purescript-contrib/purescript-http-methods.git",
+  "_target": "^4.0.0",
+  "_originalSource": "purescript-http-methods"
+}

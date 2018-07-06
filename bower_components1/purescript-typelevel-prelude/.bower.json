@@ -1,0 +1,33 @@
+{
+  "name": "purescript-typelevel-prelude",
+  "homepage": "https://github.com/purescript/purescript-typelevel-prelude",
+  "description": "Types and kinds for basic type-level programming",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript/purescript-typelevel-prelude.git"
+  },
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "bower.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-proxy": "^3.0.0",
+    "purescript-prelude": "^4.0.0",
+    "purescript-type-equality": "^3.0.0"
+  },
+  "version": "3.0.0",
+  "_release": "3.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.0.0",
+    "commit": "7aeb5990701925b199d3f49f5a073337903c9e41"
+  },
+  "_source": "https://github.com/purescript/purescript-typelevel-prelude.git",
+  "_target": "^3.0.0",
+  "_originalSource": "purescript-typelevel-prelude"
+}

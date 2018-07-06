@@ -1,0 +1,33 @@
+{
+  "name": "purescript-globals",
+  "homepage": "https://github.com/purescript/purescript-globals",
+  "description": "Typed definitions for standard Javascript globals",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript/purescript-globals.git"
+  },
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "test",
+    "bower.json",
+    "package.json"
+  ],
+  "devDependencies": {
+    "purescript-assert": "^4.0.0",
+    "purescript-console": "^4.0.0"
+  },
+  "version": "4.0.0",
+  "_release": "4.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.0.0",
+    "commit": "3c6251da362312d439a19c0939ae98653a7d4d65"
+  },
+  "_source": "https://github.com/purescript/purescript-globals.git",
+  "_target": "^4.0.0",
+  "_originalSource": "purescript-globals"
+}

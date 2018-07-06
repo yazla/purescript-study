@@ -1,23 +1,27 @@
 module EmailGenerator where
 
 import AJAX
+import Data.Array
 import Data.Either
+import Foreign.NullOrUndefined
 import ListAToA
 
-import Data.List (List(..), fromFoldable, (:))
-import Data.Maybe (Maybe(..))
+import Data.List (List(..), fromFoldable, (:), length, index)
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Nullable (Nullable)
-import Effect.Aff (Aff, Error)
+import Debug.Trace (spy, trace, traceM)
+import Effect.Aff (Aff, Error, error)
 import Foreign (Foreign, unsafeFromForeign)
 import Milkis (URL(..), json, Response)
-import Prelude (class Monad, class Show, bind, pure, show, ($), (<<<), (==), (<>), map)
+import NullableAToA (nullableOrDefault)
+import Prelude (class Monad, class Show, bind, pure, show, ($), (<<<), (==), (/=), (<>), (>), map, (&&))
 import Type.Data.Boolean (kind Boolean)
 
 data CompanyId = Name String | WebAddress String
 data EmailAdress = EmailAdress String
 
 instance showEmail :: Show EmailAdress where
-  show (EmailAdress s) = show s 
+  show (EmailAdress s) = s 
 
 type EmailParams = {
     first_name :: String,
@@ -26,14 +30,21 @@ type EmailParams = {
     company :: CompanyId
 }
 
+type EmailVerificationError = {}
+
 type VerifyResponse = {
   data :: {
+     score :: Int,
      type :: String
-  }
+  },
+  errors :: Nullable (List Error)
 }
 
+emptyList :: List Error
+emptyList = fromFoldable []
+
 generate :: EmailParams -> List EmailAdress
-generate p = fromFoldable [EmailAdress "xxx@dfdf.df", EmailAdress "www@sdfs.sdf", EmailAdress "yazla86@gmail.com"]
+generate p = fromFoldable [EmailAdress "xxx@gmail.com", EmailAdress "wwwyahoo.com", EmailAdress "yazla86@gmail.com"]
 
 
 createURL :: EmailAdress -> URL
@@ -52,8 +63,14 @@ verify :: EmailAdress -> Aff (Either Error Boolean)
 verify e = get transform url
   where
     url = createURL e
-    transform = fromForeign (\x -> Right(x.data.type == "delivarable"))
+    transform = fromForeign
+      \(x :: VerifyResponse) ->
+        (\errorsList ->
+          if length errorsList > 0
+          then Left (fromMaybe (error "Unknown error") (index errorsList 0))
+          else Right (trace x \_ -> x.data.score > 70)
+        )(nullableOrDefault emptyList x.errors)
 
 
-findEmail :: EmailParams -> Aff (Maybe EmailAdress)
+findEmail :: EmailParams -> Aff (Either Error (Maybe EmailAdress))
 findEmail = findM verify <<< generate
