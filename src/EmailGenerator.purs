@@ -63,7 +63,7 @@ emptyList :: List Error
 emptyList = fromFoldable []
 
 generate :: EmailParams -> List EmailAdress
-generate p = fromFoldable [EmailAdress "xxx@linkmatch.net", EmailAdress "wwwyahoo.com", EmailAdress "yazla86@gmail.com"]
+generate p = fromFoldable [EmailAdress "kolyaprosti@linkmatch.net", EmailAdress "wwwyahoo.com", EmailAdress "yazla86@gmail.com"]
 
 
 createURL :: EmailAdress -> URL
@@ -94,8 +94,8 @@ transformVerificationResp x = trace x \_ -> transform
     transform = pure (maybe default isVerifiedEmail verifInfoM)
       where
           default = false
-          verifInfoM = toMaybe x.data
           isVerifiedEmail = \verif_info -> verif_info.score > 70
+          verifInfoM = toMaybe x.data
 
 
 
