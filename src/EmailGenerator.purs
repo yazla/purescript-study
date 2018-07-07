@@ -11,7 +11,7 @@ import Effect.Aff (Aff, Error)
 import Foreign (unsafeFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..), json, Response)
-import Prelude (class Show, show, (<<<), (<>), (>), map)
+import Prelude (class Show, show, (<<<), (<>), (>), map, ($))
 import Type.Data.Boolean (kind Boolean)
 
 
@@ -89,10 +89,12 @@ findEmail :: EmailParams -> Aff (Either Error (Maybe EmailAdress))
 findEmail = findM verify <<< generate
 
 transformVerificationResp :: VerificationResp -> Either Error Boolean
-transformVerificationResp x = trace x \_x -> maybe (Right false) checkScore (toMaybe(x.data))
+transformVerificationResp x = trace x \_ -> fn
+  where
+    fn = Right $ maybe false isVerifiedEmail (toMaybe(x.data))
 
-checkScore :: VerificationInfo -> Either Error Boolean
-checkScore x = Right (x.score > 70)
+isVerifiedEmail :: VerificationInfo -> Boolean
+isVerifiedEmail x = x.score > 70
 
 
 
