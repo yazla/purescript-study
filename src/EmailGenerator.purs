@@ -1,22 +1,16 @@
 module EmailGenerator where
 
-import AJAX
-import Data.Array
+import AJAX(get)
 import Data.Either
-import Foreign.NullOrUndefined
-import ListAToA
-
-import Data.Int.Bits (xor)
-import Data.List (List(..), fromFoldable, (:), length, index)
-import Data.Maybe (Maybe(..), fromMaybe, maybe)
-import Data.Nullable (Nullable)
-import Data.Nullable (toNullable, toMaybe)
-import Debug.Trace (spy, trace, traceM)
-import Effect.Aff (Aff, Error, error)
-import Foreign (Foreign, unsafeFromForeign)
+import ListAToA(findM)
+import Data.List (List, fromFoldable)
+import Data.Maybe (Maybe, maybe)
+import Data.Nullable (Nullable, toMaybe)
+import Debug.Trace (trace)
+import Effect.Aff (Aff, Error)
+import Foreign (unsafeFromForeign)
 import Milkis (URL(..), json, Response)
-import NullableAToA (nullableOrDefault)
-import Prelude (class Monad, class Show, bind, pure, show, ($), (<<<), (==), (/=), (<>), (>), map, (&&))
+import Prelude (class Show, show, (<<<), (<>), (>), map)
 import Type.Data.Boolean (kind Boolean)
 
 
@@ -85,11 +79,11 @@ transformVerifyResponse x = trace x \_x -> maybe (Right false) checkScore (toMay
 
 checkScore :: ScoreInfo -> Either Error Boolean
 checkScore x = Right (x.score > 70)
--- Right (trace x \_ -> x.data.score > 70)
 
 
-      -- (\errorsList ->
-      --   if length errorsList > 0
-      --   then Left (fromMaybe (error "Unknown error") (index errorsList 0))
-      --   else Right (trace x \_ -> x.data.score > 70)
-      -- )(nullableOrDefault emptyList x.errors)
+
+-- (\errorsList ->
+--   if length errorsList > 0
+--   then Left (fromMaybe (error "Unknown error") (index errorsList 0))
+--   else Right (trace x \_ -> x.data.score > 70)
+-- )(nullableOrDefault emptyList x.errors)
