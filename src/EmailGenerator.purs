@@ -95,9 +95,7 @@ transformVerificationResp x = trace x \_ -> transform
       where
           default = false
           verifInfoM = toMaybe x.data
-
-isVerifiedEmail :: VerificationInfo -> Boolean
-isVerifiedEmail x = x.score > 70
+          isVerifiedEmail = \verif_info -> verif_info.score > 70
 
 
 
