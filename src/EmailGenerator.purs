@@ -11,7 +11,7 @@ import Effect.Aff (Aff, Error)
 import Foreign (unsafeFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..), json, Response)
-import Prelude (class Show, show, (<<<), (<>), (>), map, ($))
+import Prelude (class Show, show, (<<<), (<>), (>), map, ($), pure)
 import Type.Data.Boolean (kind Boolean)
 
 
@@ -91,7 +91,7 @@ findEmail = findM verify <<< generate
 transformVerificationResp :: VerificationResp -> Either Error Boolean
 transformVerificationResp x = trace x \_ -> transform
   where
-    transform = Right $ maybe default isVerifiedEmail verifInfoM
+    transform = pure (maybe default isVerifiedEmail verifInfoM)
       where
           default = false
           verifInfoM = toMaybe x.data
