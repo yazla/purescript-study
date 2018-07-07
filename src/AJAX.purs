@@ -19,7 +19,7 @@ get :: forall a. (Response -> Aff (Either Error a)) -> URL -> Aff (Either Error 
 get resp_parser url = do
     r <- attempt $ n_fetch url defaultFetchOptions
     case r of
-        Left e ->
-            pure (Left e)
+        Left err ->
+            pure (Left err)
         Right res ->
             resp_parser res
