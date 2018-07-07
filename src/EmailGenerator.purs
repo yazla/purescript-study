@@ -1,14 +1,15 @@
 module EmailGenerator where
 
-import AJAX(get)
 import Data.Either
-import ListAToA(findM)
+
+import AJAX (get)
 import Data.List (List, fromFoldable)
 import Data.Maybe (Maybe, maybe)
 import Data.Nullable (Nullable, toMaybe)
 import Debug.Trace (trace)
 import Effect.Aff (Aff, Error)
 import Foreign (unsafeFromForeign)
+import ListAToA (findM)
 import Milkis (URL(..), json, Response)
 import Prelude (class Show, show, (<<<), (<>), (>), map)
 import Type.Data.Boolean (kind Boolean)
@@ -35,13 +36,26 @@ type EmailVerificationError = {
   details:: String
 }
 
-type ScoreInfo = {
+data VerifResult = VerifResult String
+
+type VerificationInfo = {
      score :: Int,
-     type :: String
+     result :: VerifResult,
+     score :: Int,
+     email :: EmailAdress,
+     regexp :: Boolean,
+     gibberish :: Boolean,
+     disposable :: Boolean,
+     webmail :: Boolean,
+     mx_records :: Boolean,
+     smtp_server :: Boolean,
+     smtp_check :: Boolean,
+     accept_all :: Boolean,
+     sources :: List String
   }
 
-type VerifyResponse = {
-  data :: Nullable(ScoreInfo),
+type VerificationResp = {
+  data :: Nullable(VerificationInfo),
   errors :: Nullable (List EmailVerificationError)
 }
 
@@ -68,16 +82,16 @@ verify :: EmailAdress -> Aff (Either Error Boolean)
 verify e = get transform url
   where
     url = createURL e
-    transform = fromForeign transformVerifyResponse
+    transform = fromForeign transformVerificationResp
 
 
 findEmail :: EmailParams -> Aff (Either Error (Maybe EmailAdress))
 findEmail = findM verify <<< generate
 
-transformVerifyResponse :: VerifyResponse -> Either Error Boolean
-transformVerifyResponse x = trace x \_x -> maybe (Right false) checkScore (toMaybe(x.data))
+transformVerificationResp :: VerificationResp -> Either Error Boolean
+transformVerificationResp x = trace x \_x -> maybe (Right false) checkScore (toMaybe(x.data))
 
-checkScore :: ScoreInfo -> Either Error Boolean
+checkScore :: VerificationInfo -> Either Error Boolean
 checkScore x = Right (x.score > 70)
 
 
