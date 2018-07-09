@@ -8,12 +8,11 @@ import Data.Maybe (Maybe, maybe)
 import Data.Nullable (Nullable, toMaybe)
 import Debug.Trace (trace)
 import Effect.Aff (Aff, Error)
-import Foreign (unsafeFromForeign)
 import ListAToA (findM)
-import Milkis (URL(..), json, Response)
-import Prelude (class Show, show, (<<<), (<>), (>), map, ($), pure)
+import Milkis (URL(..))
+import Prelude (class Show, show, (<<<), (<>), (>), pure)
 import Type.Data.Boolean (kind Boolean)
-
+import FromForeign(fromForeign)
 
 data CompanyId = Name String | WebAddress String
 data EmailAdress = EmailAdress String
@@ -71,12 +70,6 @@ createURL e = url
   where 
     url =  URL ("https://api.hunter.io/v2/email-verifier?email="<> show e <> "&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a")
 
-
-fromForeign :: forall a r. (a -> r) -> Response -> Aff r
-fromForeign fn =
-    map fn
-    <<< map unsafeFromForeign
-    <<< json
 
 verify :: EmailAdress -> Aff (Either Error Boolean)
 verify e = get transform url
