@@ -8,7 +8,7 @@ import Effect (Effect)
 import Effect.Aff (Aff, Error, attempt, launchAff_)
 import Effect.Class (liftEffect)
 import Effect.Console (logShow)
-import EmailGenerator as E
+import EmailFinder as E
 import Foreign (Foreign, unsafeFromForeign)
 import Milkis (Fetch, Response, URL(..), defaultFetchOptions, json)
 import Milkis.Impl.Node (nodeFetch)
@@ -42,8 +42,8 @@ getResponse r = do
 
 p :: E.EmailParams
 p = {
-  first_name: "Yuriy",
-  last_name: "Yazlovytskyy",
+  first_name: "victor",
+  last_name: "yaremko",
   middle_name: toNullable Nothing,
   company: (E.WebAddress "linkmatch.net")
 }

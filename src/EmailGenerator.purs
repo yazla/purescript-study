@@ -1,99 +1,58 @@
 module EmailGenerator where
 
-import Data.Either
+import Prelude
 
-import AJAX (get)
 import Data.List (List, fromFoldable)
-import Data.Maybe (Maybe, maybe)
-import Data.Nullable (Nullable, toMaybe)
-import Debug.Trace (trace)
-import Effect.Aff (Aff, Error)
-import ListAToA (findM)
-import Milkis (URL(..))
-import Prelude (class Show, show, (<<<), (<>), (>), pure)
-import Type.Data.Boolean (kind Boolean)
-import FromForeign(fromForeign)
+import Data.String (Pattern(..), Replacement(..), replace)
+import Data.String.CodeUnits (take)
 
-data CompanyId = Name String | WebAddress String
-data EmailAdress = EmailAdress String
+data EmailTemplate = EmailTemplate String
 
-instance showEmail :: Show EmailAdress where
-  show (EmailAdress s) = s 
+data EmailAddress = EmailAddress String
+
+instance showEmail :: Show EmailAddress where
+  show (EmailAddress s) = s 
 
 type EmailParams = {
     first_name :: String,
     last_name :: String,
-    middle_name :: Nullable String,
-    company :: CompanyId
+    company_web :: String
 }
 
-data ErrorCode = ErrorCode Int
+generateEmails :: EmailParams -> List EmailAddress
+generateEmails e = applyTemplate e <$> emailTemplates
 
-type EmailVerificationError = {
-  id :: String,
-  code:: ErrorCode,
-  details:: String
-}
+emailTemplates :: List EmailTemplate
+emailTemplates = fromFoldable [
+  EmailTemplate "${first_name}_${last_name}@${company_web}",
+  EmailTemplate "${first_name}.${last_name}@${company_web}",
+  EmailTemplate "${first_name}-${last_name}@${company_web}",
+  EmailTemplate "${last_name}@${company_web}",
+  EmailTemplate "${first_name}@${company_web}",
+  EmailTemplate "${first_name1}${last_name}@${company_web}",
+  EmailTemplate "${first_name1}.${last_name}@${company_web}",
+  EmailTemplate "${first_name1}-${last_name}@${company_web}",
+  EmailTemplate "${first_name1}_${last_name}@${company_web}",
+  EmailTemplate "${first_name}${last_name1}@${company_web}",
+  EmailTemplate "${first_name}.${last_name1}@${company_web}",
+  EmailTemplate "${first_name}-${last_name1}@${company_web}",
+  EmailTemplate "${first_name}_${last_name1}@${company_web}",
+  EmailTemplate "${first_name}${last_name}@${company_web}",
+  EmailTemplate "${last_name}${first_name}@${company_web}",
+  EmailTemplate "${last_name}.${first_name}@${company_web}",
+  EmailTemplate "${last_name}_${first_name}@${company_web}"
+]
 
-data VerifResult = VerifResult String
-
-type VerificationInfo = {
-     score :: Int,
-     result :: VerifResult,
-     score :: Int,
-     email :: EmailAdress,
-     regexp :: Boolean,
-     gibberish :: Boolean,
-     disposable :: Boolean,
-     webmail :: Boolean,
-     mx_records :: Boolean,
-     smtp_server :: Boolean,
-     smtp_check :: Boolean,
-     accept_all :: Boolean,
-     sources :: List String
-  }
-
-type VerificationResp = {
-  data :: Nullable(VerificationInfo),
-  errors :: Nullable (List EmailVerificationError)
-}
-
-emptyList :: List Error
-emptyList = fromFoldable []
-
-generate :: EmailParams -> List EmailAdress
-generate p = fromFoldable [EmailAdress "kolyaprosti@linkmatch.net", EmailAdress "wwwyahoo.com", EmailAdress "yazla86@gmail.com"]
-
-
-createURL :: EmailAdress -> URL
-createURL e = url
-  where 
-    url =  URL ("https://api.hunter.io/v2/email-verifier?email="<> show e <> "&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a")
-
-
-verify :: EmailAdress -> Aff (Either Error Boolean)
-verify e = get transform url
-  where
-    url = createURL e
-    transform = fromForeign transformVerificationResp
-
-
-findEmail :: EmailParams -> Aff (Either Error (Maybe EmailAdress))
-findEmail = findM verify <<< generate
-
-transformVerificationResp :: VerificationResp -> Either Error Boolean
-transformVerificationResp x = trace x \_ -> transform
-  where
-    transform = pure (maybe default isVerifiedEmail verifInfoM)
-      where
-          default = false
-          isVerifiedEmail = \verif_info -> verif_info.score > 70
-          verifInfoM = toMaybe x.data
-
-
-
--- (\errorsList ->
---   if length errorsList > 0
---   then Left (fromMaybe (error "Unknown error") (index errorsList 0))
---   else Right (trace x \_ -> x.data.score > 70)
--- )(nullableOrDefault emptyList x.errors)
+applyTemplate :: EmailParams -> EmailTemplate -> EmailAddress
+applyTemplate p (EmailTemplate t) =
+    EmailAddress (
+        replace (Pattern "${first_name}") (Replacement p.first_name)
+        $
+        replace (Pattern "${first_name1}") (Replacement (take 1 p.first_name))
+        $
+        replace (Pattern "${last_name}") (Replacement p.last_name)
+        $
+        replace (Pattern "${last_name1}") (Replacement (take 1 p.last_name))
+        $
+        replace (Pattern "${company_web}") (Replacement p.company_web) t
+    )

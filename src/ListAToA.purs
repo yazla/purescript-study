@@ -16,3 +16,5 @@ findM pred (x : xs) = do
       if res
         then pure (Right (Just x))
         else findM pred xs
+
+-- reduceM
