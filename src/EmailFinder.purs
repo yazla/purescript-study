@@ -12,7 +12,7 @@ import EmailGenerator as EmailGenerator
 import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (pure, show, (<<<), (<>), (>))
+import Prelude (pure, show, (<<<), (<>), (>), map)
 import Type.Data.Boolean (kind Boolean)
 
 data CompanyId = Name String | WebAddress String
@@ -65,7 +65,7 @@ verify :: EmailGenerator.EmailAddress -> Aff (Either Error Boolean)
 verify e = get transform url
   where
     url = createURL e
-    transform = jsonFromForeign \x -> pure (verificationRespToBoolean x)
+    transform = jsonFromForeign verificationRespToBoolean
         
 
 
