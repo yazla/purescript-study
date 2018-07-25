@@ -4,8 +4,8 @@ import Effect.Aff (Aff)
 import Prelude((<<<), map)
 import Foreign (unsafeFromForeign)
 
-fromForeign :: forall a b. (a -> b) -> Response -> Aff b
-fromForeign fn =
+jsonFromForeign :: forall a b. (a -> b) -> Response -> Aff b
+jsonFromForeign fn =
     map fn
     <<< map unsafeFromForeign
     <<< json

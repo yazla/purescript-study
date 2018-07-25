@@ -3,16 +3,16 @@ module EmailFinder where
 import Data.Either
 
 import AJAX (get)
-import Data.List (List, fromFoldable)
+import Data.List (List)
 import Data.Maybe (Maybe, maybe)
 import Data.Nullable (Nullable, toMaybe)
 import Debug.Trace (trace)
 import Effect.Aff (Aff, Error)
 import EmailGenerator as EmailGenerator
-import FromForeign (fromForeign)
+import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Show, show, (<<<), (<>), (>), pure)
+import Prelude (pure, show, (<<<), (<>), (>))
 import Type.Data.Boolean (kind Boolean)
 
 data CompanyId = Name String | WebAddress String
@@ -65,15 +65,16 @@ verify :: EmailGenerator.EmailAddress -> Aff (Either Error Boolean)
 verify e = get transform url
   where
     url = createURL e
-    transform = fromForeign transformVerificationResp
+    transform = jsonFromForeign \x -> pure (verificationRespToBoolean x)
+        
 
 
 findEmail :: EmailParams -> Aff (Either Error (Maybe EmailGenerator.EmailAddress))
 findEmail = findM verify <<< EmailGenerator.generateEmails <<< toGenerationParams
 
-transformVerificationResp :: VerificationResp -> Either Error Boolean
-transformVerificationResp x = trace x \_ -> 
-  pure (maybe default isVerifiedEmail verifInfoM)
+verificationRespToBoolean :: VerificationResp -> Boolean
+verificationRespToBoolean x = trace x \_ -> 
+  maybe default isVerifiedEmail verifInfoM
       where
           default = false
           isVerifiedEmail = \verif_info -> verif_info.score > 70
