@@ -12,10 +12,19 @@ import EmailFinder as E
 import Foreign (Foreign, unsafeFromForeign)
 import Milkis (Fetch, Response, URL(..), defaultFetchOptions, json)
 import Milkis.Impl.Node (nodeFetch)
-import Prelude (Unit, bind, map, pure, show, ($), (<<<))
+import Prelude (Unit, bind, map, pure, show, ($), (<<<), unit, (<>))
+import Node.HTTP (Server)
+import Node.Express.App (listenHttp)
+import LMEmailFinderServer(appSetup)
+import Effect.Console (log)
 
-main :: Effect Unit
-main = findEmailByParams
+main :: Effect Server
+main = do
+    listenHttp (appSetup unit) 8888 \_ ->
+    log $ "Listening on " <> show "8888"
+
+
+-- main = findEmailByParams
 
 
 url :: URL

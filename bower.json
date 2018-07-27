@@ -13,7 +13,9 @@
     "purescript-milkis": "^6.0.1",
     "purescript-nullable": "^4.0.0",
     "purescript-foreign": "^5.0.0",
-    "purescript-typelevel": "^4.0.0"
+    "purescript-typelevel": "^4.0.0",
+    "purescript-express": "https://github.com/nkly/purescript-express.git#e20c1c77e1092f3a5581992c5061212c8c4ecbdc",
+    "purescript-test-unit": "^14.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0",

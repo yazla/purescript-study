@@ -12,7 +12,7 @@ import EmailGenerator as EmailGenerator
 import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Eq, show, (<>), (>), (&&), (==))
+import Prelude (class Eq, show, (<>), (>), (<<<), (&&), (==))
 import Type.Data.Boolean (kind Boolean)
 
 data CompanyId = Name String | WebAddress String
