@@ -3,6 +3,7 @@ module EmailFinder where
 import Data.Either
 
 import AJAX (get)
+import Data.Eq (class Eq1, class Eq, eq, eq1)
 import Data.List (List, fromFoldable)
 import Data.Maybe (Maybe, maybe)
 import Data.Nullable (Nullable, toMaybe)
@@ -12,7 +13,7 @@ import EmailGenerator as EmailGenerator
 import FromForeign (fromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Show, show, (<<<), (<>), (>), pure)
+import Prelude (class Show, pure, show, (&&), (<<<), (<>), (==), (>))
 import Type.Data.Boolean (kind Boolean)
 
 data CompanyId = Name String | WebAddress String
@@ -33,6 +34,8 @@ type EmailVerificationError = {
 }
 
 data VerifResult = VerifResult String
+
+derive instance eqVerifResult :: Eq VerifResult
 
 type VerificationInfo = {
      score :: Int,
@@ -76,7 +79,7 @@ transformVerificationResp x = trace x \_ ->
   pure (maybe default isVerifiedEmail verifInfoM)
       where
           default = false
-          isVerifiedEmail = \verif_info -> verif_info.score > 70
+          isVerifiedEmail = \verif_info -> (verif_info.score > 70) && (verif_info.result == VerifResult "deliverable")
           verifInfoM = toMaybe x.data
           -- todo: add error handling
 

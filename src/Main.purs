@@ -42,10 +42,10 @@ getResponse r = do
 
 p :: E.EmailParams
 p = {
-  first_name: "victor",
-  last_name: "yaremko",
+  first_name: "Anika",
+  last_name: "Henry",
   middle_name: toNullable Nothing,
-  company: (E.WebAddress "linkmatch.net")
+  company: (E.WebAddress "tr.com")
 }
 findEmailByParams :: Effect Unit
 findEmailByParams = launchAff_ do

@@ -30,6 +30,7 @@ emailTemplates = fromFoldable [
   EmailTemplate "${last_name}@${company_web}",
   EmailTemplate "${first_name}@${company_web}",
   EmailTemplate "${first_name1}${last_name}@${company_web}",
+  EmailTemplate "${last_name}${first_name1}@${company_web}",
   EmailTemplate "${first_name1}.${last_name}@${company_web}",
   EmailTemplate "${first_name1}-${last_name}@${company_web}",
   EmailTemplate "${first_name1}_${last_name}@${company_web}",
