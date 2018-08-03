@@ -12,8 +12,9 @@ import EmailGenerator as EmailGenerator
 import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Eq, show, (<>), (>), (<<<), (&&), (==))
+import Prelude (class Eq, show, (<>), (>), (<<<), (&&), (==), Unit)
 import Type.Data.Boolean (kind Boolean)
+import Type.Data.Symbol (SProxy)
 
 data CompanyId = Name String | WebAddress String
 
@@ -32,13 +33,14 @@ type EmailVerificationError = {
   details:: String
 }
 
-data VerifResult = VerifResult String
+-- newtype OneOf (r :: # Type) = UnsafeOneOf String
 
-derive instance eqVerifResult :: Eq VerifResult
+-- type S = OneOf ("one" :: Unit, "two" :: Unit)
+
 
 type VerificationInfo = {
      score :: Int,
-     result :: VerifResult,
+     result :: String,
      score :: Int,
      email :: EmailGenerator.EmailAddress,
      regexp :: Boolean,
@@ -79,9 +81,8 @@ verificationRespToBoolean x = trace x \_ ->
   maybe default isVerifiedEmail verifInfoM
       where
           default = false
-          isVerifiedEmail = \verif_info -> (verif_info.score > 70) && (verif_info.result == VerifResult "deliverable")
+          isVerifiedEmail = \verif_info -> (verif_info.score > 70) && (verif_info.result == "deliverable")
           verifInfoM = toMaybe x.data
-          -- todo: add error handling
 
 
 
@@ -95,8 +96,7 @@ toGenerationParams :: EmailParams -> EmailGenerator.EmailParams
 toGenerationParams p = {
     first_name: p.first_name,
     last_name: p.last_name,
-    company_web: ""
-    -- company_web: Name p.company of
-    --   Name s -> s
-    --   WebAddress s -> s
+    company_web: case p.company of
+      Name s -> s
+      WebAddress s -> s
   }

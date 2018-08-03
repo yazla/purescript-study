@@ -28,7 +28,6 @@ emailTemplates = fromFoldable [
   EmailTemplate "${first_name}.${last_name}@${company_web}",
   EmailTemplate "${first_name}-${last_name}@${company_web}",
   EmailTemplate "${last_name}@${company_web}",
-  EmailTemplate "${first_name}@${company_web}",
   EmailTemplate "${first_name1}${last_name}@${company_web}",
   EmailTemplate "${last_name}${first_name1}@${company_web}",
   EmailTemplate "${first_name1}.${last_name}@${company_web}",
@@ -41,7 +40,8 @@ emailTemplates = fromFoldable [
   EmailTemplate "${first_name}${last_name}@${company_web}",
   EmailTemplate "${last_name}${first_name}@${company_web}",
   EmailTemplate "${last_name}.${first_name}@${company_web}",
-  EmailTemplate "${last_name}_${first_name}@${company_web}"
+  EmailTemplate "${last_name}_${first_name}@${company_web}",
+  EmailTemplate "${first_name}@${company_web}"
 ]
 
 applyTemplate :: EmailParams -> EmailTemplate -> EmailAddress
