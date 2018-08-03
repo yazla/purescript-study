@@ -34,8 +34,11 @@ type EmailVerificationError = {
 }
 
 -- newtype OneOf (r :: # Type) = UnsafeOneOf String
-
--- type S = OneOf ("one" :: Unit, "two" :: Unit)
+-- pick :: forall s r l . IsSymbol s => Row.Cons s Unit l r => SProxy s -> OneOf r
+-- pick s = UnsafeOneOf (reflectSymbol s)
+-- unsafePick :: forall r . String -> OneOf r
+-- unsafePick = UnsafeOneOf
+-- match ...
 
 
 type VerificationInfo = {
