@@ -95,7 +95,8 @@ toGenerationParams :: EmailParams -> EmailGenerator.EmailParams
 toGenerationParams p = {
     first_name: p.first_name,
     last_name: p.last_name,
-    company_web: case p.company of
-      Name s -> s
-      WebAddress s -> s
+    company_web: ""
+    -- company_web: Name p.company of
+    --   Name s -> s
+    --   WebAddress s -> s
   }
