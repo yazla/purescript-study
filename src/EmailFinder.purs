@@ -12,7 +12,7 @@ import EmailGenerator as EmailGenerator
 import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Eq, show, (<>), (>), (<<<), (&&), (==), Unit)
+import Prelude (class Eq, Unit, show, (&&), (<<<), (<>), (=<<), (==), (>), (<$>))
 import Type.Data.Boolean (kind Boolean)
 import Type.Data.Symbol (SProxy)
 
@@ -40,25 +40,42 @@ type EmailVerificationError = {
 -- unsafePick = UnsafeOneOf
 -- match ...
 
+data VerificationResult = Deliverable | NotDeliverable
+
+derive instance eqVerResult :: Eq VerificationResult
 
 type VerificationInfo = {
-     score :: Int,
-     result :: String,
-     score :: Int,
-     email :: EmailGenerator.EmailAddress,
-     regexp :: Boolean,
-     gibberish :: Boolean,
-     disposable :: Boolean,
-     webmail :: Boolean,
-     mx_records :: Boolean,
-     smtp_server :: Boolean,
-     smtp_check :: Boolean,
-     accept_all :: Boolean,
-     sources :: List String
-  }
+  score :: Int,
+  result :: VerificationResult,
+  email :: EmailGenerator.EmailAddress,
+  regexp :: Boolean,
+  gibberish :: Boolean,
+  disposable :: Boolean,
+  webmail :: Boolean,
+  mx_records :: Boolean,
+  smtp_server :: Boolean,
+  smtp_check :: Boolean,
+  accept_all :: Boolean,
+  sources :: List String
+}
+
+type VerificationResponse = {
+    score :: Int,
+    result :: String,
+    email :: EmailGenerator.EmailAddress,
+    regexp :: Boolean,
+    gibberish :: Boolean,
+    disposable :: Boolean,
+    webmail :: Boolean,
+    mx_records :: Boolean,
+    smtp_server :: Boolean,
+    smtp_check :: Boolean,
+    accept_all :: Boolean,
+    sources :: List String
+}
 
 type VerificationResp = {
-  data :: Nullable(VerificationInfo),
+  data :: Nullable(VerificationResponse),
   errors :: Nullable (List EmailVerificationError)
 }
 
@@ -74,7 +91,21 @@ verify e = get transform url
     url = createURL e
     transform = jsonFromForeign verificationRespToBoolean
         
-
+convertResponse :: VerificationResponse -> VerificationInfo
+convertResponse r = {
+  score : r.score,
+  result : toVerificationInfo(r.result),
+  email : r.email,
+  regexp : r.regexp,
+  gibberish : r.gibberish,
+  disposable : r.disposable,
+  webmail : r.webmail,
+  mx_records : r.mx_records,
+  smtp_server : r.smtp_server,
+  smtp_check : r.smtp_check,
+  accept_all : r.accept_all,
+  sources : r.sources
+}
 
 findEmail :: EmailParams -> Aff (Either Error (Maybe EmailGenerator.EmailAddress))
 findEmail = findM verify <<< EmailGenerator.generateEmails <<< toGenerationParams
@@ -84,8 +115,8 @@ verificationRespToBoolean x = trace x \_ ->
   maybe default isVerifiedEmail verifInfoM
       where
           default = false
-          isVerifiedEmail = \verif_info -> (verif_info.score > 70) && (verif_info.result == "deliverable")
-          verifInfoM = toMaybe x.data
+          isVerifiedEmail = \verif_info -> (verif_info.score > 70) && (verif_info.result == Deliverable)
+          verifInfoM = convertResponse <$> toMaybe x.data
 
 
 
@@ -103,3 +134,7 @@ toGenerationParams p = {
       Name s -> s
       WebAddress s -> s
   }
+
+toVerificationInfo :: String -> VerificationResult
+toVerificationInfo "deliverable" = Deliverable
+toVerificationInfo _ = NotDeliverable
