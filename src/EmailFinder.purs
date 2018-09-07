@@ -9,11 +9,12 @@ import Data.Nullable (Nullable, toMaybe)
 import Debug.Trace (trace)
 import Effect.Aff (Aff, Error)
 import EmailGenerator as EmailGenerator
+import EmailVerifier (verifyEmail, Result(..), Params)
 import FromForeign (jsonFromForeign)
 import ListAToA (findM)
 import Milkis (URL(..))
-import Prelude (class Eq, Unit, show, (&&), (<<<), (<>), (=<<), (==), (>), (<$>))
-import Type.Data.Boolean (kind Boolean)
+import Prelude (class Eq, Unit, show, bind, pure, (&&), (<<<), (<>), (=<<), (==), (>), ($), (<$>))
+import Type.Data.Boolean (kind Boolean, True)
 import Type.Data.Symbol (SProxy)
 
 data CompanyId = Name String | WebAddress String
@@ -85,11 +86,24 @@ createURL e = url
     url =  URL ("https://api.hunter.io/v2/email-verifier?email="<> show e <> "&api_key=1d23c467945ddcf470c6d9d7a8e439515ceb1b7a")
 
 
+-- verify :: EmailGenerator.EmailAddress -> Aff (Either Error Boolean)
+-- verify e = get transform url
+--   where
+--     url = createURL e
+--     transform = jsonFromForeign verificationRespToBoolean
+
+
 verify :: EmailGenerator.EmailAddress -> Aff (Either Error Boolean)
-verify e = get transform url
-  where
-    url = createURL e
-    transform = jsonFromForeign verificationRespToBoolean
+verify (EmailGenerator.EmailAddress e) = do
+  result <- verifyEmail {
+    helo : "google.com",
+    from : "for.spam.only.yy@gmail.com",
+    to : e,
+    debug : true, -- default false
+    catchalltest : true, -- default false
+    timeout : 3000 -- default 5000
+  }
+  pure (Right $ result == EXIST)
         
 convertResponse :: VerificationResponse -> VerificationInfo
 convertResponse r = {
